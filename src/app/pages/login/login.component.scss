@@ -1,0 +1,15 @@
+.form-group{
+  position: relative;
+
+  .eye-password{
+    cursor: pointer;
+    position: absolute;
+    right: 15px;
+    bottom: 12px;
+    font-size: 1.3em;
+  }
+
+  &.has-error .eye-password {
+    bottom: 1.7em;
+  }
+}

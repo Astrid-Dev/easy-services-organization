@@ -1,0 +1,84 @@
+<div class="unix-login">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="login-content">
+          <div class="login-logo">
+            <a href="../../../index.html"><span>Easy Services</span></a>
+          </div>
+          <div class="login-form">
+            <h4>{{'REGISTER.TITLE' | translate}}</h4>
+            <form [formGroup]="registerForm" (ngSubmit)="onFormSubmit()">
+              <div [className]="inputStatusClassName('username')">
+                <label for="username">{{'REGISTER.USERNAME.LABEL' | translate}}</label>
+                <input id="username" formControlName="username" type="text" class="form-control" placeholder="{{'REGISTER.USERNAME.PLACEHOLDER' | translate}}"/>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.username.errors?.required">
+                  {{'REGISTER.USERNAME.REQUIRED' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.username.errors?.maxlength">
+                  {{'REGISTER.USERNAME.MAXLENGTH' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.username.errors?.minlength">
+                  {{'REGISTER.USERNAME.MINLENGTH' | translate}}
+                </span>
+              </div>
+              <div [className]="inputStatusClassName('email')">
+                <label for="email">{{'REGISTER.EMAIL.LABEL' | translate}}</label>
+                <input id="email" formControlName="email" type="email" class="form-control" placeholder="{{'REGISTER.EMAIL.PLACEHOLDER' | translate}}"/>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email.errors?.required">
+                  {{'REGISTER.EMAIL.REQUIRED' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email.errors?.maxlength">
+                  {{'REGISTER.EMAIL.MAXLENGTH' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email.errors?.email">
+                  {{'REGISTER.EMAIL.INVALID' | translate}}
+                </span>
+              </div>
+              <div [className]="inputStatusClassName('password')">
+                <label for="password">{{'REGISTER.PASSWORD.LABEL' | translate}}</label>
+                <input id="password" formControlName="password" type="password" class="form-control" placeholder="{{'REGISTER.PASSWORD.PLACEHOLDER' | translate}}"/>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.password.errors?.required">
+                  {{'REGISTER.PASSWORD.REQUIRED' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.password.errors?.maxlength">
+                  {{'REGISTER.PASSWORD.MAXLENGTH' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.password.errors?.minlength">
+                  {{'REGISTER.PASSWORD.MINLENGTH' | translate}}
+                </span>
+              </div>
+              <div [className]="inputStatusClassName('confirm_password')">
+                <label for="confirm_password">{{'REGISTER.CONFIRMPASSWORD.LABEL' | translate}}</label>
+                <input id="confirm_password" formControlName="confirm_password" type="password" class="form-control" placeholder="{{'REGISTER.CONFIRMPASSWORD.PLACEHOLDER' | translate}}"/>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.confirm_password.errors?.required">
+                  {{'REGISTER.CONFIRMPASSWORD.REQUIRED' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.confirm_password.errors?.mustMatch">
+                  {{'REGISTER.CONFIRMPASSWORD.MUSTMATCH' | translate}}
+                </span>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input formControlName="terms_approbation" type="checkbox"> {{'REGISTER.AGREETERMS' | translate}}
+                </label>
+                <div class="text-danger">
+                  <span class="form-control-feedback small" *ngIf="formIsSubmitted && !hasApprovedTerms">
+                    {{'REGISTER.SHOULDAGREETERMS' | translate}}
+                  </span>
+                </div>
+              </div>
+              <button *ngIf="!isProcessing" type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">{{'REGISTER.SUBMIT' | translate}}</button>
+              <button *ngIf="isProcessing" [disabled]="true" class="btn btn-primary btn-flat m-b-30 m-t-30">
+                <i class="fa fa-spin fa-spinner fa-2x"></i>
+              </button>
+              <div class="register-link m-t-15 text-center">
+                <p>{{'REGISTER.HAVEACCOUNT' | translate}} <a routerLink="/login"> {{'REGISTER.LOGIN' | translate}}</a></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

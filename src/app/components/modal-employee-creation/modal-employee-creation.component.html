@@ -1,0 +1,92 @@
+<ngx-smart-modal #employeeCreation identifier="employeeCreation">
+  <div *ngIf="hasData" style="min-width: 600px;">
+    <div class="mb-4">
+      <div class="card-title">
+        <h3 style="text-transform: none">Nouvel Employé</h3>
+      </div>
+    </div>
+
+    <fieldset class="form-group mt-2" *ngIf="!selectedUser">
+      <div class="d-flex flex-row justify-content-between align-items-center">
+        <label>Qui recherchez-vous ?</label>
+        <div>
+          <label class="mr-4">
+            <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'email'" type="radio" value="email">
+            Email
+          </label>
+          <label>
+            <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'username'" type="radio" value="username">
+            Nom d'utilisateur
+          </label>
+        </div>
+      </div>
+      <div class="ng-autocomplete">
+        <ng-autocomplete
+          #identifier
+          [data]="possiblesUsers"
+          [searchKeyword]="identifierKey"
+          [minQueryLength]="3"
+          [itemTemplate]="itemTemplate1"
+          [notFoundTemplate]="notFoundTemplate1"
+          [isLoading]="isSearchingPossiblesUsers"
+          (selected)='onSelectUser($event)'
+          (inputChanged)='onIdentifierChange($event)'
+          (inputCleared)="onIdentifierChange($event)"></ng-autocomplete>
+        <ng-template #itemTemplate1 let-item>
+          <div>
+            <a [className]="!item.is_free ? 'click-disabled text-danger' : ''" [innerHTML]="item[identifierKey]"></a>
+            <span class="item-description text-italic text-grey">
+              {{getAUserNames(item)}}
+            </span>
+          </div>
+        </ng-template>
+
+        <ng-template #notFoundTemplate1 let-notFound>
+          <div [className]="identifier.query === '' ? 'hidden': ''">
+            <button class="btn btn-outline-primary btn-block" (click)="onSelectNewUser()">Créér l'employée avec le nom {{identifier?.query}}</button>
+          </div>
+        </ng-template>
+      </div>
+    </fieldset>
+
+    <form class="row" [formGroup]="createEmployeeForm" (ngSubmit)="onCreateEmployee()" *ngIf="selectedUser">
+      <div [className]="inputStatusClassName('confirm_password')">
+        <label for="names">Noms & Prénoms <span class="text-danger huge">*</span></label>
+        <input id="names" formControlName="names" type="text" class="form-control"/>
+      </div>
+
+      <div [className]="inputStatusClassName('confirm_password')">
+        <label for="username">Nom d'utilisateur <span class="text-danger huge">*</span></label>
+        <input id="username" formControlName="username" type="text" class="form-control"/>
+      </div>
+
+      <div [className]="inputStatusClassName('confirm_password')">
+        <label for="email">Email <span class="text-danger huge">*</span></label>
+        <input id="email" formControlName="email" type="email" class="form-control"/>
+      </div>
+
+      <div [className]="inputStatusClassName('confirm_password')">
+        <label for="phone_number">Numéro de téléphone <span class="text-danger huge">*</span></label>
+        <input id="phone_number" formControlName="phone_number" type="tel" class="form-control"/>
+      </div>
+
+      <div class="form-group col-6">
+        <label>Services <span class="text-danger huge">*</span></label>
+        <app-services-checklist (onChange)="onServicesChange($event)" [servicesList]="servicesList"></app-services-checklist>
+      </div>
+
+      <div class="col-12 m-t-30 center">
+        <ng-container *ngIf="!isProcessing">
+          <button type="submit" class="btn btn-primary mr-1" [disabled]="!createEmployeeForm.valid || checkedServices.length === 0">Créé l'employé</button>
+          <button type="reset" class="btn btn-secondary" (click)="close()">Annuler</button>
+        </ng-container>
+        <ng-container *ngIf="isProcessing">
+          <button [disabled]="true" class="btn btn-primary btn-block">
+            <i class="fa fa-spin fa-spinner"></i>
+          </button>
+        </ng-container>
+      </div>
+    </form>
+  </div>
+
+</ngx-smart-modal>

@@ -1,0 +1,178 @@
+<div class="main">
+  <div class="container-fluid">
+
+    <app-page-header></app-page-header>
+
+    <section id="main-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <div class="list-manager-top">
+              <div class="showing-number">
+                <label for="select-showing">Afficher</label>
+                <select id="select-showing" [(ngModel)]="paginator.totalResultsPerPage">
+                  <option [value]="9">9</option>
+                  <option [value]="15">15</option>
+                  <option [value]="21">21</option>
+                </select>
+              </div>
+              <div class="table-action-buttons">
+                <button class="btn btn-primary" (click)="openFilteringModal()">Plus de filtres</button>
+              </div>
+              <div class="searchbar">
+                <label for="search-input">Rechercher</label>
+                <input id="search-input" type="search"/>
+              </div>
+            </div>
+          </div>
+
+          <app-loading-container
+            class="bg-white"
+            *ngIf="isLoading || hasFailedLoading"
+            [isLoading]="isLoading"
+            [hasFailedLoading]="hasFailedLoading"
+            (onReloadData)="loadData()"
+          ></app-loading-container>
+
+          <div class="row requests-list" *ngIf="!isLoading && !hasFailedLoading">
+            <div class="col-lg-4 request-item" (click)="onViewRequestDetails(request)" *ngFor="let request of requests">
+              <div class="card">
+                <div class="stat-widget-four">
+                  <div class="stat-icon">
+                    <i class="ti-server"></i>
+                  </div>
+                  <div class="stat-content text-start m-l-75">
+                    <div class="text-left dib">
+                      <span class="text-dark creation-date">{{printDate(request.created_at, true)}}</span>
+                      <div class="stat-heading">#{{request.code}}</div>
+                      <div class="stat-text small">{{label(request?.service)}}</div>
+                    </div>
+                  </div>
+                </div>
+                <hr/>
+                <div>
+                  <div class="row">
+                    <div class="col-7 overflow-dots">
+                      <i class="ti-map-alt"></i>
+                      <span>{{request.address}}</span>
+                    </div>
+                    <div class="col-5 overflow-dots">
+                      <i class="fa fa-money"></i>
+                      <span>{{request.user_price ? (request.user_price + ' FCFA') : '-'}}</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-7 overflow-dots">
+                      <i class="fa fa-calendar"></i>
+                      <span>{{printDate(request.user_intervention_date)}}</span>
+                    </div>
+                    <div class="col-5 overflow-dots">
+                      <span [className]="requestStateColor(request.state)">{{requestStateLabel(request.state)}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+<!--            <div class="col-lg-4 request-item-to-hide" *ngFor="let temp of remainingItemsToCompleteRow">-->
+<!--              <div class="card">-->
+<!--                <div class="stat-widget-four">-->
+<!--                  <div class="stat-icon">-->
+<!--                    <i class="ti-server"></i>-->
+<!--                  </div>-->
+<!--                  <div class="stat-content text-start m-l-75">-->
+<!--                    <div class="text-left dib">-->
+<!--                      <span class="text-dark creation-date">-</span>-->
+<!--                      <div class="stat-heading">#</div>-->
+<!--                      <div class="stat-text small">-</div>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--                <hr/>-->
+<!--                <div>-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-7 overflow-dots">-->
+<!--                      <i class="ti-map-alt"></i>-->
+<!--                      <span>-</span>-->
+<!--                    </div>-->
+<!--                    <div class="col-5 overflow-dots">-->
+<!--                      <i class="fa fa-money"></i>-->
+<!--                      <span>-</span>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                  <div class="row">-->
+<!--                    <div class="col-7 overflow-dots">-->
+<!--                      <i class="fa fa-calendar"></i>-->
+<!--                      <span>-</span>-->
+<!--                    </div>-->
+<!--                    <div class="col-5 overflow-dots">-->
+<!--                      <span>-</span>-->
+<!--                    </div>-->
+<!--                  </div>-->
+<!--                </div>-->
+<!--              </div>-->
+<!--            </div>-->
+          </div>
+
+          <div class="card">
+            <div class="list-manager-bottom">
+              <div class="result-number">
+                <span class="text-italic">Resultat de {{paginator.currentPageStartingNumber}} à {{paginator.currentPageEndingNumber}} sur {{paginator.totalResults}}</span>
+              </div>
+              <div class="paginator">
+                <nav aria-label="...">
+                  <ul class="pagination">
+                    <li (click)="goToPage(paginator.currentPage - 1)" [class.disabled]="paginator.currentPage === 1" class="page-item">
+                      <a class="page-link">Précédent</a>
+                    </li>
+                    <ng-container *ngIf="paginator.totalPages <= 10">
+                      <li (click)="goToPage(page)" [class.active]="paginator.currentPage === page" *ngFor="let page of arrayOfPages(paginator.totalPages)" class="page-item">
+                        <a class="page-link">{{page}}</a>
+                      </li>
+                    </ng-container>
+
+                    <ng-container *ngIf="paginator.totalPages > 10">
+                      <ng-container *ngIf="paginator.currentPage <= 4">
+                        <li (click)="goToPage(page)" [class.active]="paginator.currentPage === page" *ngFor="let page of arrayOfPages(8)" class="page-item">
+                          <a class="page-link">{{page}}</a>
+                        </li>
+                        <li class="page-item disabled"><a class="page-link">...</a></li>
+                        <li (click)="goToPage(page)" [class.active]="paginator.currentPage === page" *ngFor="let page of arrayOfPages(2, paginator.totalPages-1)" class="page-item">
+                          <a class="page-link">{{page}}</a>
+                        </li>
+                      </ng-container>
+
+                      <ng-container *ngIf="(paginator.currentPage > 4) && (paginator.currentPage < (paginator.totalPages - 4))">
+                        <li (click)="goToPage(page)" [class.active]="paginator.currentPage === page" *ngFor="let page of arrayOfPages(2)" class="page-item">
+                          <a class="page-link">{{page}}</a>
+                        </li>
+                        <li class="page-item disabled"><a class="page-link">...</a></li>
+                        <li (click)="goToPage(page)" [class.active]="paginator.currentPage === page" *ngFor="let page of arrayOfPages(3, paginator.currentPage-1)" class="page-item">
+                          <a class="page-link">{{page}}</a>
+                        </li>
+                        <li class="page-item disabled"><a class="page-link">...</a></li>
+                        <li (click)="goToPage(page)" [class.active]="paginator.currentPage === page" *ngFor="let page of arrayOfPages(2, paginator.totalPages-1)" class="page-item">
+                          <a class="page-link">{{page}}</a>
+                        </li>
+                      </ng-container>
+                    </ng-container>
+                    <li class="page-item" (click)="goToPage(paginator.currentPage + 1)" [class.disabled]="paginator.currentPage === paginator.totalPages">
+                      <a class="page-link">Suivant</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+
+          <!-- /# card -->
+        </div>
+        <!-- /# column -->
+      </div>
+      <!-- /# row -->
+
+      <app-footer></app-footer>
+    </section>
+  </div>
+</div>
+
+<app-modal-requests-filtering (onApply)="onApplyFilter($event)"></app-modal-requests-filtering>

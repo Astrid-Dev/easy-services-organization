@@ -1,0 +1,131 @@
+<div class="main">
+  <div class="container-fluid">
+
+    <app-page-header></app-page-header>
+
+    <section id="main-content">
+      <div class="row">
+        <div class="col-lg-12">
+          <div class="card">
+            <button class="btn-flat btn btn-primary flat-icon" routerLink="/organization/edit">
+              <i class="fa fa-pencil"></i>
+            </button>
+            <div class="card-body">
+
+              <app-loading-container
+                *ngIf="!hasLoadedUserData"
+                [isLoading]="isLoadingLocalData"
+                [hasFailedLoading]="hasFailedLocalDataLoading"
+                (onReloadData)="loadUser()"
+              ></app-loading-container>
+
+              <div class="user-profile" *ngIf="hasLoadedUserData">
+                <div class="row">
+                  <div class="col-lg-4">
+                    <div class="user-photo m-b-30">
+                      <app-organization-logo [setMinHeight]="true" class="img-fluid" [imagePath]="organizationLogo" [name]="organization.name"></app-organization-logo>
+<!--                      <img class="img-fluid" src="assets/template/images/user-profile.jpg" alt="" />-->
+                    </div>
+                    <div class="user-skill">
+                      <h4>Services</h4>
+                      <ul>
+                        <li *ngFor="let application of organization.applications">
+                          <a href="#">{{application.service_id}}</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-lg-8">
+                    <div class="user-profile-name">{{organization.name}}</div>
+                    <div class="user-Location">
+                      <i class="ti-key"></i> #{{organization.code}}</div>
+                    <div class="user-job-title">{{employeesNumber}} {{'ORGANIZATION.INFOS.EMPLOYEES' | translate}}</div>
+                    <div class="ratings">
+                      <h4>Note</h4>
+                      <div class="rating-star">
+                        <span>8.9</span>
+                        <i class="ti-star color-primary"></i>
+                        <i class="ti-star color-primary"></i>
+                        <i class="ti-star color-primary"></i>
+                        <i class="ti-star color-primary"></i>
+                        <i class="ti-star"></i>
+                      </div>
+                    </div>
+<!--                    <div class="user-send-message">-->
+<!--                      <button class="btn btn-primary btn-addon" type="button">-->
+<!--                        <i class="ti-email"></i>Send Message</button>-->
+<!--                    </div>-->
+                    <div class="custom-tab user-profile-tab">
+                      <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="active">
+                          <a href="#1" aria-controls="1" role="tab" data-toggle="tab">{{'ORGANIZATION.INFOS.ABOUT.TITLE' | translate}}</a>
+                        </li>
+                      </ul>
+                      <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="1">
+                          <div class="contact-information">
+                            <h4>Localisation</h4>
+                            <div class="phone-content">
+                              <span class="contact-title">Pays: </span>
+                              <span class="phone-number">{{getAFieldValue('country')}}</span>
+                            </div>
+                            <div class="email-content">
+                              <span class="contact-title">Ville: </span>
+                              <span class="contact-email">{{getAFieldValue('city')}}</span>
+                              <div class="address-content">
+                                <span class="contact-title">{{'ORGANIZATION.INFOS.ABOUT.CONTACTS.ADDRESS' | translate}}:</span>
+                                <span class="mail-address">{{getAFieldValue('address')}}</span>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div class="contact-information">
+                            <h4>{{'ORGANIZATION.INFOS.ABOUT.CONTACTS.TITLE' | translate}}</h4>
+                            <div class="phone-content">
+                              <span class="contact-title">{{'ORGANIZATION.INFOS.ABOUT.CONTACTS.PHONENUMBER' | translate}}: </span>
+                              <span class="phone-number">{{organization.phone_number1}}</span>
+                              <ng-container *ngIf="organization.phone_number2">
+                                <span class="separator">/</span>
+                                <span class="phone-number">{{organization.phone_number2}}</span>
+                              </ng-container>
+                            </div>
+                            <div class="email-content">
+                              <span class="contact-title">{{'ORGANIZATION.INFOS.ABOUT.CONTACTS.EMAIL' | translate}}: </span>
+                              <span class="contact-email">{{organization.email1}}</span>
+                              <ng-container *ngIf="organization.email2">
+                                <span class="separator">/</span>
+                                <span class="contact-email">{{organization.email2}}</span>
+                              </ng-container>
+                            </div>
+
+                            <div class="website-content">
+                              <span class="contact-title">{{'ORGANIZATION.INFOS.ABOUT.CONTACTS.WEBSITE' | translate}}:</span>
+                              <span class="contact-website">{{getAFieldValue('website')}}</span>
+                            </div>
+                            <div class="skype-content">
+                              <span class="contact-title">Twitter:</span>
+                              <span class="contact-skype">{{getAFieldValue('twitter')}}</span>
+                            </div>
+                            <div class="skype-content">
+                              <span class="contact-title">Facebook:</span>
+                              <span class="contact-skype">{{getAFieldValue('facebook')}}</span>
+                            </div>
+                            <div class="skype-content">
+                              <span class="contact-title">Instagram:</span>
+                              <span class="contact-skype">{{getAFieldValue('instagram')}}</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-footer></app-footer>
+    </section>
+  </div>
+</div>

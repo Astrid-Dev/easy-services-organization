@@ -1,0 +1,150 @@
+<div class="unix-login">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+        <div class="login-content">
+          <div class="login-logo">
+            <a href="index.html"><span>Easy Services</span></a>
+          </div>
+          <div class="login-form">
+            <h4>{{'ORGANIZATION.REGISTRATION.TITLE' | translate}}</h4>
+            <app-loading-container
+              *ngIf="!hasLoadedAll"
+              [isLoading]="isLoadingData"
+              [hasFailedLoading]="hasFailedDataLoading"
+              (onReloadData)="loadAll()"
+            ></app-loading-container>
+            <form [formGroup]="organizationRegistrationForm" (ngSubmit)="onFormSubmit()" *ngIf="hasLoadedAll">
+              <div class="row">
+                <div class="col-lg-4">
+                  <div class="organization-logo col-12" appDnd (fileDropped)="onFileDropped($event)">
+                    <app-organization-logo [imagePath]="logoBase64" [name]="formValue.name"></app-organization-logo>
+                    <label class="camera-icon bg-primary" for="fileDropRef">
+                      <i class="fa fa-camera"></i>
+                    </label>
+                    <input class="hidden" type="file" alt="" #fileDropRef id="fileDropRef" multiple (change)="fileBrowseHandler($event)" />
+                  </div>
+                  <div class="col-12 p-t-20 form-group">
+                    <label>Services <span class="text-danger huge">*</span></label>
+                    <app-services-checklist [servicesList]="servicesList" (onChange)="onServicesChange($event)"></app-services-checklist>
+                  </div>
+                </div>
+                <div class="col-lg-8">
+                  <div class="row">
+                    <div [className]="inputStatusClassName('name') + ' col-12'">
+                      <label for="name">{{'ORGANIZATION.REGISTRATION.NAME.LABEL' | translate}} <span class="text-danger huge">*</span></label>
+                      <input id="name" formControlName="name" type="text" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.NAME.PLACEHOLDER' | translate}}">
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.name.errors?.required">
+                        {{'ORGANIZATION.REGISTRATION.NAME.REQUIRED' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.name.errors?.maxlength">
+                        {{'ORGANIZATION.REGISTRATION.NAME.MAXLENGTH' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.name.errors?.minlength">
+                        {{'ORGANIZATION.REGISTRATION.NAME.MINLENGTH' | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div [className]="inputStatusClassName('phone_number1') + ' col-6'">
+                      <label for="contact1">{{'ORGANIZATION.REGISTRATION.PHONENUMBER1.LABEL' | translate}} <span class="text-danger huge">*</span></label>
+                      <input id="contact1" formControlName="phone_number1" type="tel" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.PHONENUMBER1.PLACEHOLDER' | translate}}">
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.phone_number1.errors?.required">
+                        {{'ORGANIZATION.REGISTRATION.PHONENUMBER1.REQUIRED' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.phone_number1.errors?.maxlength">
+                        {{'ORGANIZATION.REGISTRATION.PHONENUMBER1.MAXLENGTH' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.phone_number1.errors?.minlength">
+                        {{'ORGANIZATION.REGISTRATION.PHONENUMBER1.MINLENGTH' | translate}}
+                      </span>
+                    </div>
+                    <div [className]="inputStatusClassName('phone_number2') + ' col-6'">
+                      <label for="contact2">{{'ORGANIZATION.REGISTRATION.PHONENUMBER2.LABEL' | translate}}</label>
+                      <input id="contact2" formControlName="phone_number2" type="tel" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.PHONENUMBER2.PLACEHOLDER' | translate}}">
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.phone_number2.errors?.maxlength">
+                        {{'ORGANIZATION.REGISTRATION.PHONENUMBER2.MAXLENGTH' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.phone_number2.errors?.minlength">
+                        {{'ORGANIZATION.REGISTRATION.PHONENUMBER2.MINLENGTH' | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div [className]="inputStatusClassName('email1') + ' col-6'">
+                      <label for="email1">{{'ORGANIZATION.REGISTRATION.EMAIL1.LABEL' | translate}} <span class="text-danger huge">*</span></label>
+                      <input id="email1" formControlName="email1" type="email" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.EMAIL1.PLACEHOLDER' | translate}}">
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email1.errors?.required">
+                        {{'ORGANIZATION.REGISTRATION.EMAIL1.REQUIRED' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email1.errors?.maxlength">
+                        {{'ORGANIZATION.REGISTRATION.EMAIL1.MAXLENGTH' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email1.errors?.email">
+                        {{'ORGANIZATION.REGISTRATION.EMAIL1.INVALID' | translate}}
+                      </span>
+                    </div>
+                    <div [className]="inputStatusClassName('email2') + ' col-6'">
+                      <label for="email2">{{'ORGANIZATION.REGISTRATION.EMAIL2.LABEL' | translate}}</label>
+                      <input id="email2" formControlName="email2" type="email" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.EMAIL2.PLACEHOLDER' | translate}}">
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email2.errors?.maxlength">
+                        {{'ORGANIZATION.REGISTRATION.EMAIL2.MAXLENGTH' | translate}}
+                      </span>
+                      <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email2.errors?.email">
+                        {{'ORGANIZATION.REGISTRATION.EMAIL2.INVALID' | translate}}
+                      </span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div [className]="inputStatusClassName('facebook') + ' col-6'">
+                      <label for="facebook">{{'ORGANIZATION.REGISTRATION.FACEBOOK.LABEL' | translate}}</label>
+                      <input id="facebook" formControlName="facebook" type="text" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.FACEBOOK.PLACEHOLDER' | translate}}">
+                    </div>
+                    <div [className]="inputStatusClassName('instagram') + ' col-6'">
+                      <label for="instagram">{{'ORGANIZATION.REGISTRATION.INSTAGRAM.LABEL' | translate}}</label>
+                      <input id="instagram" formControlName="instagram" type="text" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.INSTAGRAM.PLACEHOLDER' | translate}}">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div [className]="inputStatusClassName('twitter') + ' col-6'">
+                      <label for="twitter">{{'ORGANIZATION.REGISTRATION.TWITTER.LABEL' | translate}}</label>
+                      <input id="twitter" formControlName="twitter" type="text" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.TWITTER.PLACEHOLDER' | translate}}">
+                    </div>
+                    <div [className]="inputStatusClassName('website') + ' col-6'">
+                      <label for="website">{{'ORGANIZATION.REGISTRATION.WEBSITE.LABEL' | translate}}</label>
+                      <input id="website" formControlName="website" type="url" class="form-control" placeholder="{{'ORGANIZATION.REGISTRATION.WEBSITE.PLACEHOLDER' | translate}}">
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-lg-6">
+                      <div [className]="inputStatusClassName('description')">
+                        <label for="description1">{{'ORGANIZATION.REGISTRATION.DESCRIPTION1.LABEL' | translate}}</label>
+                        <textarea id="description1" formControlName="description" [rows]="5" class="textarea form-text w-100" placeholder="{{'ORGANIZATION.REGISTRATION.DESCRIPTION1.PLACEHOLDER' | translate}}"></textarea>
+                        <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.description.errors?.maxlength">
+                          {{'ORGANIZATION.REGISTRATION.DESCRIPTION1.MAXLENGTH' | translate}}
+                        </span>
+                      </div>
+                    </div>
+                    <div class="col-lg-6">
+                      <div [className]="inputStatusClassName('description_en')">
+                        <label for="description2">{{'ORGANIZATION.REGISTRATION.DESCRIPTION2.LABEL' | translate}}</label>
+                        <textarea id="description2" formControlName="description_en" [rows]="5" type="email" class="textarea form-text w-100" placeholder="{{'ORGANIZATION.REGISTRATION.DESCRIPTION2.PLACEHOLDER' | translate}}"></textarea>
+                        <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.description_en.errors?.maxlength">
+                          {{'ORGANIZATION.REGISTRATION.DESCRIPTION2.MAXLENGTH' | translate}}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <button *ngIf="!isProcessing" type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">{{'ORGANIZATION.REGISTRATION.SUBMIT' | translate}}</button>
+              <button *ngIf="isProcessing" [disabled]="true" class="btn btn-primary btn-flat m-b-30 m-t-30">
+                <i class="fa fa-spin fa-spinner fa-2x"></i>
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

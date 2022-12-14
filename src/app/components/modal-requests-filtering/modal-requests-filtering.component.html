@@ -1,0 +1,56 @@
+<ngx-smart-modal #requestsFiltering identifier="requestsFiltering">
+  <div *ngIf="hasData" style="min-width: 600px;">
+    <div class="mb-4">
+      <div class="card-title">
+        <h3 style="text-transform: none">Filtrer les requêtes</h3>
+      </div>
+    </div>
+
+    <div class="m-t-20">
+      <div class="col-12 form-group">
+        <label>Services</label>
+        <app-services-checklist [servicesList]="data.servicesList" (onChange)="onServicesChange($event)"></app-services-checklist>
+      </div>
+
+      <div class="col-12 form-group">
+        <label>Status</label>
+        <div class="checkbox">
+          <label (click)="onStatesChange(true)">
+            <input [disabled]="checkAllStates" type="checkbox" [checked]="checkAllStates"> Tout sélectionner
+          </label>
+        </div>
+        <div class="checkbox" *ngFor="let state of states; index as i">
+          <label (click)="onStatesChange(false, i)">
+            <input type="checkbox" [checked]="state.isChecked"> {{state.label}}
+          </label>
+        </div>
+      </div>
+
+      <div class="col-12 form-group">
+        <label>Trier par</label>
+        <div>
+          <label class="d-block" *ngFor="let orderType of orderTypes">
+            <input (change)="onOrderTypeChange($event)" name="orderType" [checked]="filter && filter.order_by === orderType.value" type="radio" [value]="orderType.value">
+            {{orderType.label}}
+          </label>
+        </div>
+      </div>
+
+      <div class="col-12 form-group">
+        <label>Ordre du tri</label>
+        <div>
+          <label class="d-block" *ngFor="let orderDirection of orderDirections">
+            <input (change)="onOrderDirectionChange($event)" name="orderDirection" [checked]="filter && filter.order_direction === orderDirection.value" type="radio" [value]="orderDirection.value">
+            {{orderDirection.label}}
+          </label>
+        </div>
+      </div>
+
+      <div class="col-12 m-t-30 center">
+        <button type="submit" class="btn btn-primary m-r-10" (click)="onApply()">Appliquer</button>
+        <button type="reset" class="btn btn-secondary" (click)="onApply(true)">Effacer</button>
+      </div>
+    </div>
+  </div>
+
+</ngx-smart-modal>

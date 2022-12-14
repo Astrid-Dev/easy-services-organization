@@ -1,0 +1,10 @@
+<div class="loading-container center">
+  <i *ngIf="isLoading" class="text-primary fa fa-spin fa-spinner fa-5x"></i>
+  <div *ngIf="hasFailedLoading" class="loading-error flex-column center">
+    <i class="text-danger ti-face-sad" style="font-size: 5em;"></i>
+    <span class="text-danger text-italic m-t-20 m-b-20">
+      {{'LOADINGERROR.DATA' | translate}}
+    </span>
+    <button class="btn btn-primary" (click)="reloadData()">{{'LOADINGERROR.RELOAD' | translate}}</button>
+  </div>
+</div>

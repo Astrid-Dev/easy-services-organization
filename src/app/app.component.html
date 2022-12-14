@@ -1,0 +1,7 @@
+<app-sidemenu *ngIf="canShowStaticsComponents" class="sidebar sidebar-hide-to-small sidebar-shrink sidebar-gestures"></app-sidemenu>
+
+<app-header *ngIf="canShowStaticsComponents"></app-header>
+
+<div [className]="canShowStaticsComponents ? 'content-wrap' : 'bg-primary'">
+  <router-outlet></router-outlet>
+</div>

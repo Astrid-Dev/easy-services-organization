@@ -1,0 +1,62 @@
+<div class="unix-login">
+  <div class="container-fluid">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="login-content">
+          <div class="login-logo">
+            <a href="../../../index.html"><span>Easy Services</span></a>
+          </div>
+          <div class="login-form">
+            <h4>{{'LOGIN.TITLE' | translate}}</h4>
+            <form [formGroup]="loginForm" (ngSubmit)="onFormSubmit()">
+              <div [className]="inputStatusClassName('email')">
+                <label for="email">{{'LOGIN.EMAIL.LABEL' | translate}}</label>
+                <input formControlName="email" id="email" type="email" class="form-control" placeholder="{{'LOGIN.EMAIL.PLACEHOLDER' | translate}}">
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email.errors?.required">
+                  {{'LOGIN.EMAIL.REQUIRED' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email.errors?.maxlength">
+                  {{'LOGIN.EMAIL.MAXLENGTH' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.email.errors?.email">
+                  {{'LOGIN.EMAIL.INVALID' | translate}}
+                </span>
+              </div>
+              <div [className]="inputStatusClassName('password')">
+                <label for="password">{{'LOGIN.PASSWORD.LABEL' | translate}}</label>
+                <i *ngIf="passwordFieldType !== 'text'" (click)="changePasswordType()" title="{{'LOGIN.SHOWPASSWORD' | translate}}" class="eye-password text-dark fa fa-eye"></i>
+                <i *ngIf="passwordFieldType === 'text'" (click)="changePasswordType()" title="{{'LOGIN.HIDEPASSWORD' | translate}}" class="eye-password text-dark fa fa-eye-slash"></i>
+                <input formControlName="password" id="password" [type]="passwordFieldType" class="form-control" placeholder="{{'LOGIN.PASSWORD.PLACEHOLDER' | translate}}"/>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.password.errors?.required">
+                  {{'LOGIN.PASSWORD.REQUIRED' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.password.errors?.maxlength">
+                  {{'LOGIN.PASSWORD.MAXLENGTH' | translate}}
+                </span>
+                <span class="form-control-feedback small" *ngIf="formIsSubmitted && errorControl.password.errors?.minlength">
+                  {{'LOGIN.PASSWORD.MINLENGTH' | translate}}
+                </span>
+              </div>
+              <div class="checkbox">
+                <label>
+                  <input type="checkbox"> {{'LOGIN.REMEMBERME' | translate}}
+                </label>
+                <label class="pull-right">
+                  <a href="#">{{'LOGIN.FORGOTTENPASSWORD' | translate}}</a>
+                </label>
+
+              </div>
+              <button *ngIf="!isProcessing" type="submit" class="btn btn-primary btn-flat m-b-30 m-t-30">{{'LOGIN.SUBMIT' | translate}}</button>
+              <button *ngIf="isProcessing" [disabled]="true" class="btn btn-primary btn-flat m-b-30 m-t-30">
+                <i class="fa fa-spin fa-spinner fa-2x"></i>
+              </button>
+              <div class="register-link m-t-15 text-center">
+                <p>{{'LOGIN.NEWER' | translate}} <a routerLink="/register"> {{'LOGIN.REGISTER' | translate}}</a></p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

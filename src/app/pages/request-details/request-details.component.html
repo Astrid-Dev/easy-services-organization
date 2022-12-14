@@ -1,0 +1,147 @@
+<div class="main">
+  <div class="container-fluid">
+
+    <app-page-header></app-page-header>
+
+    <section id="main-content">
+      <div class="row">
+        <div class="col-lg-12">
+
+          <app-loading-container
+            class="bg-white"
+            *ngIf="isLoading || hasFailedLoading"
+            [isLoading]="isLoading"
+            [hasFailedLoading]="hasFailedLoading"
+            (onReloadData)="loadAll()"
+          ></app-loading-container>
+
+          <div class="card" *ngIf="!hasFailedLoading && !isLoading">
+            <button class="btn-flat btn btn-primary flat-icon">
+              <i class="ti-map-alt"></i>
+            </button>
+            <div class="card-body">
+              <div class="user-profile">
+                <div class="row">
+                  <div class="row col-8">
+                    <div class="col-6">
+                      <div class="user-work">
+                        <h4>À Propos du client</h4>
+                        <div class="work-content">
+                          <span class="request-field-label">Noms & Prénoms :</span>
+                          <span class="request-field-value">{{requestUser?.names}}</span>
+
+                          <span class="request-field-label">Email :</span>
+                          <span class="request-field-value">{{requestUser?.email}}</span>
+
+                          <span class="request-field-label">Téléphone :</span>
+                          <span class="request-field-value">{{requestUser?.phone_number}}</span>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-6">
+                      <div class="user-work">
+                        <h4>À Propos de la négociation</h4>
+                        <div class="work-content">
+                          <span class="request-field-label">Date d'intervention du client :</span>
+                          <span class="request-field-value">{{printDate(requestData?.user_intervention_date)}}</span>
+
+                          <span class="request-field-label">Votre date :</span>
+                          <span class="request-field-value">{{(requestData && requestData.provider_intervention_date) ? printDate(requestData.provider_intervention_date) : "-"}}</span>
+
+                          <span class="request-field-label">Prix du client :</span>
+                          <span class="request-field-value">{{(requestData && requestData.user_price) ? (requestData.user_price + ' FCFA') : '-'}}</span>
+
+                          <span class="request-field-label">Votre prix :</span>
+                          <span class="request-field-value">{{(requestData && requestData.provider_price) ? (requestData.provider_price + ' FCFA') : '-'}}</span>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="user-work">
+                        <h4>À Propos de la requête</h4>
+                        <div class="row work-content">
+                          <div class="col-6">
+                            <span class="request-field-label">Code</span>
+                            <span class="request-field-value">#{{requestData?.code}}</span>
+                          </div>
+                          <div class="col-6">
+                            <span class="request-field-label">Status</span>
+                            <span [className]="requestStateColor(requestData?.state) + ' request-field-value'">{{requestStateLabel(requestData?.state)}}</span>
+                          </div>
+                          <div class="col-6">
+                            <span class="request-field-label">Catégorie</span>
+                            <span class="request-field-value">{{label(requestService?.parent)}}</span>
+                          </div>
+                          <div class="col-6">
+                            <span class="request-field-label">Service</span>
+                            <span class="request-field-value">{{label(requestService)}}</span>
+                          </div>
+                          <div class="col-6">
+                            <span class="request-field-label">Adresse</span>
+                            <span class="request-field-value">{{requestData?.address}}</span>
+                          </div>
+                          <div class="col-6">
+                            <span class="request-field-label">Date de création</span>
+                            <span class="request-field-value">{{printDate(requestData?.created_at, false)}}</span>
+                          </div>
+                          <div class="col-6" *ngFor="let answer of simpleAnswers; index as i">
+                            <span class="request-field-label">{{label(answer)}}</span>
+                            <span class="request-field-value">{{value(answer)}}</span>
+                          </div>
+
+                          <div class="col-6" *ngFor="let answer of arrayAnswers; index as i">
+                            <span class="request-field-label">{{label(answer)}}</span>
+                            <span class="request-field-value">{{getAllValuesOfArrayAnswer(answer.values ? answer.values : [])}}</span>
+                          </div>
+
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                  <div class="col-4">
+                    <div class="col-12"  *ngIf="requestProvider">
+                      <div class="user-work">
+                        <h4>À Propos du Prestataire</h4>
+                        <div class="work-content">
+                          <span class="request-field-label">Noms & Prénoms :</span>
+                          <span class="request-field-value">{{requestProvider.user ? requestProvider.user.names : '-'}}</span>
+
+                          <span class="request-field-label">Email :</span>
+                          <span class="request-field-value">{{requestProvider.user ? requestProvider.user.email : '-'}}</span>
+
+                          <span class="request-field-label">Téléphone :</span>
+                          <span class="request-field-value">{{requestProvider.user ? requestProvider.user.phone_number : '-'}}</span>
+
+                          <span class="request-field-label">Note :</span>
+                          <span class="request-field-value">*****</span>
+
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-12">
+                      <div class="user-work">
+                        <h4>Actions</h4>
+                        <div class="work-content">
+                          <button class="btn btn-danger btn-block" *ngIf="canCancel">Abandonner</button>
+                          <button (click)="openNegotiationModal()" class="btn btn-primary btn-block" *ngIf="canNegotiate">Faire une offre</button>
+                          <button class="btn btn-success btn-block" *ngIf="canApprove">Approuver</button>
+                          <button class="btn btn-outline-primary btn-block" *ngIf="canChangeProvider">Changer le prestataire</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <app-footer></app-footer>
+    </section>
+  </div>
+</div>
+
+<app-modal-request-negotiation (onNegotiate)="onNegotiationCompleted($event)"></app-modal-request-negotiation>

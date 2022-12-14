@@ -1,0 +1,4 @@
+<div *ngIf="!canShowImage" [style]="'font-size: '+abbreviationFontSize +  (setMinHeight ? '; min-height: 337.63px;' : '')" class="bg-danger">
+  {{abbreviatedName}}
+</div>
+<img *ngIf="canShowImage" [style]="(setMinHeight ? 'min-height: 337.63px' : '')" [src]="imagePath" alt=""/>

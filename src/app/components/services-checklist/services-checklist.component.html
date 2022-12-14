@@ -1,0 +1,27 @@
+<div class="accordion" id="servicesListAccordion">
+  <div class="accordion-item" *ngFor="let item of servicesList">
+    <h2 class="accordion-header" [id]="categoryParentId(item.parent.id)">
+      <button (click)="onAccordionChange(categoryParentId(item.parent.id))" [class.collapsed]="!isCurrentAccordionItem(categoryParentId(item.parent.id))"
+              class="accordion-button"
+              type="button"
+              data-bs-toggle="collapse" data-bs-target="#collapseOne"
+              [attr.aria-expanded]="isCurrentAccordionItem(categoryParentId(item.parent.id))" aria-controls="collapseOne">
+        {{label(item.parent)}}
+      </button>
+    </h2>
+    <div [id]="'childrenForCategory'+item.parent.id" [class.show]="isCurrentAccordionItem(categoryParentId(item.parent.id))" class="accordion-collapse collapse" [attr.aria-labelledby]="categoryParentId(item.parent.id)"  data-bs-parent="#servicesListAccordion">
+      <div class="accordion-body">
+        <div class="checkbox">
+          <label (click)="onCheckAllChildrenServices(item.parent.id)">
+            <input type="checkbox" [checked]="item.parent.hasCheckedAllChildren"> Tout sélectionner
+          </label>
+        </div>
+        <div class="checkbox" *ngFor="let service of item.children">
+          <label (click)="onCheckOneChildService(item.parent.id, service.id)">
+            <input type="checkbox" [checked]="service.isChecked"> {{label(service)}}
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

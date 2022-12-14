@@ -1,0 +1,49 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'ngx-toastr/toastr';
+@import "ngx-smart-modal/ngx-smart-modal";
+@import 'smart-webcomponents-angular/source/styles/smart.default.css';
+
+
+.center{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading-container{
+  width: 100%;
+  min-height: 60vh;
+}
+
+.text-italic{
+  font-style: italic;
+}
+
+#js-licensing{
+  display: none !important;
+}
+
+.flat-icon{
+  width: 3em;
+  height: 3em;
+  border-radius: 50%;
+  position: fixed;
+  bottom: 1em;
+  right: 1em;
+}
+
+.overflow-dots{
+  white-space: nowrap;
+  overflow: hidden !important;
+  text-overflow: ellipsis;
+}
+
+li.item:has(div .click-disabled){
+
+  cursor: not-allowed !important;
+  div{
+    pointer-events: none !important;
+  }
+
+}

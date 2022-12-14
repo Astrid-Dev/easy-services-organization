@@ -1,0 +1,25 @@
+<div class="nano">
+  <div class="nano-content">
+    <div class="logo text-center"><a routerLink="home">
+      <span>Easy services</span>
+      <!-- <img src="assets/template/images/logo.png" alt="" /> -->
+    </a></div>
+    <ul>
+<!--      <li class="label">Main</li>-->
+<!--      <li><a class="sidebar-sub-toggle"><i class="ti-home"></i> Dashboard <span-->
+<!--        class="badge badge-primary">2</span> <span-->
+<!--        class="sidebar-collapse-icon ti-angle-down"></span></a>-->
+<!--        <ul>-->
+<!--          <li><a routerLink="home">Dashboard 1</a></li>-->
+<!--          <li><a href="index1.html">Dashboard 2</a></li>-->
+<!--        </ul>-->
+<!--      </li>-->
+
+      <li [class.active]="isActiveMenu('home')"><a routerLink="/home"><i class="ti-home"></i> Accueil</a></li>
+      <li [class.active]="isActiveMenu('organization')"><a routerLink="/organization/infos"><i class="fa fa-building-o"></i> Mon organisation</a></li>
+      <li [class.active]="isActiveMenu('employees')"><a routerLink="/employees"><i class="ti-id-badge"></i> Mes employés</a></li>
+      <li [class.active]="isActiveMenu('calendar')"><a routerLink="/calendar"><i class="ti-calendar"></i> Calendrier</a></li>
+      <li [class.active]="isActiveMenu('requests')"><a routerLink="/requests"><i class="fa fa-newspaper-o"></i> Requêtes</a></li>
+    </ul>
+  </div>
+</div>
