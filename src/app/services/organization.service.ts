@@ -6,6 +6,7 @@ import {NewEmployee} from "../models/Employee";
 
 const ORGANIZATION_URL = `${environment.BACKEND_API_URL}organizations`;
 const ORGANIZATION_REQUESTS_URL = `${environment.BACKEND_API_URL}enquiries`;
+const ORGANIZATION_DASHBOARD_URL = `${environment.BACKEND_API_URL}dashboard/organization`;
 const ORGANIZATION_EMPLOYEES_URL = `${environment.BACKEND_API_URL}service_providers`;
 const ORGANIZATION_EMPLOYEES_GESTURE_URL = `${environment.BACKEND_API_URL}organization_employees`;
 const SEARCH_USER_URL = `${ORGANIZATION_EMPLOYEES_GESTURE_URL}/search_for_user`;
@@ -107,7 +108,7 @@ export class OrganizationService {
   updateARequest(requestId: number, newRequestData: any)
   {
     return new Promise(((resolve, reject) => {
-      this.http.put(ORGANIZATION_REQUESTS_URL+'/'+requestId, {...newRequestData, is_organization: true})
+      this.http.put(ORGANIZATION_REQUESTS_URL+'/'+requestId, {...newRequestData, author: 'organization'})
         .subscribe({
           next: (res) =>{
             resolve(res);
@@ -176,4 +177,21 @@ export class OrganizationService {
         });
     }));
   }
+
+  //Dashboard
+
+  getAnOrganizationDashboard(organizationId: number){
+    return new Promise(((resolve, reject) => {
+      this.http.get(`${ORGANIZATION_DASHBOARD_URL}/${organizationId}`)
+        .subscribe({
+          next: (res) =>{
+            resolve(res);
+          },
+          error: (err) =>{
+            reject(err);
+          }
+        });
+    }));
+  }
+
 }

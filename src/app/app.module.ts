@@ -14,6 +14,8 @@ import { LoginComponent } from './pages/login/login.component';
 import {TranslateLoader, TranslateModule} from "@ngx-translate/core";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import { CalendarComponent } from './pages/calendar/calendar.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
     declarations: [
@@ -37,6 +39,7 @@ import { CalendarComponent } from './pages/calendar/calendar.component';
             isolate: false
         }),
         SharedModule.forRoot(),
+        CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory }),
     ],
     providers: [
         {

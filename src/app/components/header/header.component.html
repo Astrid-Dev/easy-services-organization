@@ -1,9 +1,9 @@
-<div class="header">
+<div class="header" [class.m-l-75]="sideMenuIsHidden">
   <div class="container-fluid">
     <div class="row">
       <div class="col-lg-12 d-flex justify-content-between">
         <div class="float-left">
-          <div class="hamburger sidebar-toggle">
+          <div class="hamburger sidebar-toggle" (click)="onToggleSideMenu()" id="hamburgerButton">
             <span class="line"></span>
             <span class="line"></span>
             <span class="line"></span>
@@ -11,9 +11,10 @@
         </div>
         <div class="float-right">
           <div class="dropdown dib">
-            <div class="header-icon" data-toggle="dropdown">
-              <i class="ti-bell"></i>
-              <div class="drop-down dropdown-menu dropdown-menu-right">
+            <div class="header-icon">
+              <i class="ti-bell"><label for="notificationDropDownMenu"></label></i>
+              <input type="checkbox" class="dropdown-toggler" id="notificationDropDownMenu"/>
+              <div class="dropdown-menu">
                 <div class="dropdown-content-heading">
                   <span class="text-left">Recent Notifications</span>
                 </div>
@@ -77,10 +78,12 @@
               </div>
             </div>
           </div>
+
           <div class="dropdown dib">
             <div class="header-icon" data-toggle="dropdown">
-              <i class="ti-email"></i>
-              <div class="drop-down dropdown-menu dropdown-menu-right">
+              <i class="ti-email"><label for="messageDropDownMenu"></label></i>
+              <input type="checkbox" class="dropdown-toggler" id="messageDropDownMenu"/>
+              <div class="dropdown-menu">
                 <div class="dropdown-content-heading">
                   <span class="text-left">2 New Messages</span>
                   <a href="email.html">
@@ -151,10 +154,12 @@
           </div>
           <div class="dropdown dib">
             <div class="header-icon" data-toggle="dropdown">
-                                <span class="user-avatar">John
-                                    <i class="ti-angle-down f-s-10"></i>
-                                </span>
-              <div class="drop-down dropdown-profile dropdown-menu dropdown-menu-right">
+              <span class="user-avatar">John
+                  <i class="ti-angle-down f-s-10"><label for="profileDropDownMenu"></label></i>
+              </span>
+
+              <input type="checkbox" class="dropdown-toggler" id="profileDropDownMenu"/>
+              <div class="dropdown-menu">
                 <div class="dropdown-content-heading">
                   <span class="text-left">Upgrade Now</span>
                   <p class="trial-day">30 Days Trail</p>

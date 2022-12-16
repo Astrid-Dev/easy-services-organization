@@ -124,11 +124,16 @@
                     <div class="col-12">
                       <div class="user-work">
                         <h4>Actions</h4>
-                        <div class="work-content">
-                          <button class="btn btn-danger btn-block" *ngIf="canCancel">Abandonner</button>
-                          <button (click)="openNegotiationModal()" class="btn btn-primary btn-block" *ngIf="canNegotiate">Faire une offre</button>
-                          <button class="btn btn-success btn-block" *ngIf="canApprove">Approuver</button>
-                          <button class="btn btn-outline-primary btn-block" *ngIf="canChangeProvider">Changer le prestataire</button>
+                        <div class="work-content" *ngIf="!isProcessing">
+                          <button (click)="askConfirmation('cancellation')" class="btn btn-danger btn-block m-b-20" *ngIf="canCancel">Abandonner</button>
+                          <button (click)="openNegotiationModal()" class="btn btn-primary btn-block m-b-20" *ngIf="canNegotiate">Faire une offre</button>
+                          <button (click)="askConfirmation('approbation')" class="btn btn-success btn-block m-b-20" *ngIf="canApprove">Approuver</button>
+                          <button (click)="openNegotiationModal(true)" class="btn btn-outline-primary btn-block" *ngIf="canChangeProvider">Changer le prestataire</button>
+                        </div>
+                        <div class="work-content" *ngIf="isProcessing">
+                          <button [disabled]="true" [className]="'btn btn'+loaderColor+'-primary btn-block'">
+                            <i class="fa fa-spin fa-spinner"></i>
+                          </button>
                         </div>
                       </div>
                     </div>

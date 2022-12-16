@@ -28,11 +28,7 @@
                     </div>
                     <div class="user-skill">
                       <h4>Services</h4>
-                      <ul>
-                        <li *ngFor="let application of organization.applications">
-                          <a href="#">{{application.service_id}}</a>
-                        </li>
-                      </ul>
+                      <app-services-checklist [servicesList]="servicesList" [readOnly]="true"></app-services-checklist>
                     </div>
                   </div>
                   <div class="col-lg-8">

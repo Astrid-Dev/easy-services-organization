@@ -2,7 +2,7 @@
 
 @import 'ngx-toastr/toastr';
 @import "ngx-smart-modal/ngx-smart-modal";
-@import 'smart-webcomponents-angular/source/styles/smart.default.css';
+@import "../node_modules/angular-calendar/css/angular-calendar.css";
 
 
 .center{
@@ -46,4 +46,8 @@ li.item:has(div .click-disabled){
     pointer-events: none !important;
   }
 
+}
+
+.btn-block{
+  width: 100%;
 }

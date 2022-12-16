@@ -1,6 +1,6 @@
 <ngx-smart-modal #requestNegotiation identifier="requestNegotiation">
   <div *ngIf="hasData" style="min-width: 600px;">
-    <div class="mb-4">
+    <div class="m-b-40">
       <div class="card-title">
         <h3 style="text-transform: none">Nouvelle offre</h3>
       </div>
@@ -14,72 +14,86 @@
       (onReloadData)="loadPossibleProviders()"
     ></app-loading-container>
 
-    <fieldset class="form-group mt-2" *ngIf="!isLoading && !hasFailedLoading">
-      <div class="d-flex flex-row justify-content-between align-items-center">
-        <label>Qui recherchez-vous (Prestataire en charge) ?</label>
-        <div>
-          <label class="small mr-4">
-            <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'names'" type="radio" value="names">
-            Noms & prénoms
-          </label>
-          <label class="small mr-4">
-            <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'email'" type="radio" value="email">
-            Email
-          </label>
-          <label class="small">
-            <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'username'" type="radio" value="username">
-            Nom d'utilisateur
-          </label>
-        </div>
-      </div>
-      <div class="ng-autocomplete">
-        <ng-autocomplete
-          #identifier
-          [data]="possiblesProviders"
-          [searchKeyword]="identifierKey"
-          [minQueryLength]="3"
-          [itemTemplate]="itemTemplate1"
-          [notFoundTemplate]="notFoundTemplate1"
-          (selected)='onSelectProvider($event)'
-          (inputChanged)='onIdentifierChange($event)'
-          (inputCleared)="onIdentifierChange($event)"></ng-autocomplete>
-        <ng-template #itemTemplate1 let-item>
+    <ng-container *ngIf="!isLoading && !hasFailedLoading">
+      <fieldset class="form-group m-t-20" *ngIf="canSetAProvider">
+        <div class="d-flex flex-row justify-content-between align-items-center">
+          <label>Prestataire en charge</label>
           <div>
-            <a [innerHTML]="item[identifierKey]"></a>
+            <label class="small m-r-40">
+              <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'names'" type="radio" value="names">
+              Noms & prénoms
+            </label>
+            <label class="small m-r-40">
+              <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'email'" type="radio" value="email">
+              Email
+            </label>
+            <label class="small">
+              <input (change)="onIdentifierKeyChange($event)" name="identifierKey" [checked]="identifierKey === 'username'" type="radio" value="username">
+              Nom d'utilisateur
+            </label>
           </div>
-        </ng-template>
+        </div>
+        <div class="ng-autocomplete">
+          <ng-autocomplete
+            #identifier
+            [data]="possiblesProviders"
+            [searchKeyword]="identifierKey"
+            [minQueryLength]="3"
+            [itemTemplate]="itemTemplate1"
+            [notFoundTemplate]="notFoundTemplate1"
+            (selected)='onSelectProvider($event)'
+            (inputChanged)='onIdentifierChange($event)'
+            (inputCleared)="onIdentifierChange($event)"></ng-autocomplete>
+          <ng-template #itemTemplate1 let-item>
+            <div>
+              <a [innerHTML]="item[identifierKey]"></a>
+            </div>
+          </ng-template>
 
-        <ng-template #notFoundTemplate1 let-notFound>
+          <ng-template #notFoundTemplate1 let-notFound>
 
-        </ng-template>
-      </div>
-    </fieldset>
+          </ng-template>
+        </div>
+      </fieldset>
 
-    <form class="row" [formGroup]="makeAnOfferForm" (ngSubmit)="onNegotiate()">
-      <div [className]="inputStatusClassName('user_date')">
-        <label for="user_date">Date d'intervention du client</label>
-        <input id="user_date" formControlName="user_date" type="text" class="form-control"/>
-      </div>
+      <form class="row" [formGroup]="makeAnOfferForm" (ngSubmit)="onNegotiate()" *ngIf="!data.justChangeProvider">
+        <div [className]="inputStatusClassName('user_date')">
+          <label for="user_date">Date d'intervention du client</label>
+          <input id="user_date" formControlName="user_date" type="text" class="form-control"/>
+        </div>
 
-      <div [className]="inputStatusClassName('provider_date')">
-        <label for="provider_date">Votre date <span class="text-danger huge">*</span></label>
-        <input id="provider_date" formControlName="provider_date" type="datetime-local" class="form-control"/>
-      </div>
+        <div [className]="inputStatusClassName('provider_date')">
+          <label for="provider_date">Votre date <span class="text-danger huge">*</span></label>
+          <input id="provider_date" formControlName="provider_date" type="datetime-local" class="form-control"/>
+        </div>
 
-      <div [className]="inputStatusClassName('user_price')">
-        <label for="user_price">Prix du client</label>
-        <input id="user_price" formControlName="user_price" type="number" class="form-control"/>
-      </div>
+        <div [className]="inputStatusClassName('user_price')">
+          <label for="user_price">Prix du client</label>
+          <input id="user_price" formControlName="user_price" type="number" class="form-control"/>
+        </div>
 
-      <div [className]="inputStatusClassName('provider_price')">
-        <label for="provider_price">Votre prix <span class="text-danger huge">*</span></label>
-        <input id="provider_price" formControlName="provider_price" type="number" class="form-control"/>
-      </div>
+        <div [className]="inputStatusClassName('provider_price')">
+          <label for="provider_price">Votre prix <span class="text-danger huge">*</span></label>
+          <input id="provider_price" formControlName="provider_price" type="number" class="form-control"/>
+        </div>
 
-      <div class="col-12 mt-3 center">
+        <div class="col-12 m-t-30 center">
+          <ng-container *ngIf="!isProcessing">
+            <button type="submit" class="btn btn-primary m-r-10" [disabled]="!canSubmitForm">Faire l'offre</button>
+            <button type="submit" class="btn btn-primary m-r-10" [disabled]="!canChangeProvider">Changer le prestataire</button>
+            <button type="reset" class="btn btn-secondary" (click)="close()">Annuler</button>
+          </ng-container>
+          <ng-container *ngIf="isProcessing">
+            <button [disabled]="true" class="btn btn-primary btn-block">
+              <i class="fa fa-spin fa-spinner"></i>
+            </button>
+          </ng-container>
+        </div>
+      </form>
+      <div class="col-12 m-t-30 center" *ngIf="data.justChangeProvider">
         <ng-container *ngIf="!isProcessing">
-          <button type="submit" class="btn btn-primary mr-1" [disabled]="!makeAnOfferForm.valid && selectedProvider">Faire l'offre</button>
-          <button type="reset" class="btn btn-secondary" (click)="close()">Annuler</button>
+          <button (click)="onChangeProvider()" class="btn btn-primary m-r-10" [disabled]="!canChangeProvider">Changer le prestataire</button>
+          <button class="btn btn-secondary" (click)="close()">Annuler</button>
         </ng-container>
         <ng-container *ngIf="isProcessing">
           <button [disabled]="true" class="btn btn-primary btn-block">
@@ -87,7 +101,7 @@
           </button>
         </ng-container>
       </div>
-    </form>
+    </ng-container>
   </div>
 
 </ngx-smart-modal>

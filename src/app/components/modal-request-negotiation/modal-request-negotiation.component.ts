@@ -45,7 +45,7 @@ export class ModalRequestNegotiationComponent {
       user_date: [null],
       user_price: [null],
       provider_date: [null, [Validators.required]],
-      provider_price: [null, [Validators.required]],
+      provider_price: [null, [Validators.required, Validators.min(10)]],
     });
 
     this.makeAnOfferForm.controls.provider_date.valueChanges.subscribe((value: any) =>{console.log(value)});
@@ -79,6 +79,19 @@ export class ModalRequestNegotiationComponent {
     return this.makeAnOfferForm.value;
   }
 
+  get canSetAProvider(){
+    return this.data?.requestData?.state === State.CREATED || this.data.justChangeProvider;
+  }
+
+  get canSubmitForm(){
+    return (this.makeAnOfferForm.valid && ((this.canSetAProvider && this.selectedProvider) ||
+      (!this.canSetAProvider)) && (new Date(this.formControls.provider_date.value).getTime() > (new Date().getTime() + (1000*60*30))));
+  }
+
+  get canChangeProvider(){
+    return this.canSetAProvider && this.selectedProvider;
+  }
+
   inputStatusClassName(formControlName: string){
     let result = '';
     let control = this.formControls[formControlName];
@@ -101,13 +114,22 @@ export class ModalRequestNegotiationComponent {
     this.modal.addCustomClass("nsm-centered");
     this.modal.onOpenFinished.subscribe((mountModal: NgxSmartModalComponent) =>{
 
-      this.loadPossibleProviders();
+      if(!this.canSetAProvider){
+        this.hasLoadedPossiblesProviders = true;
+      }
+      else{
+        this.loadPossibleProviders();
+      }
 
       this.formControls.user_date.setValue(printReadableDate(new Date(this.data?.requestData?.user_intervention_date), this.translationService.getCurrentLang(), true, true));
       this.formControls.user_price.setValue(this.data?.requestData?.user_intervention_date ?? '-');
+      this.formControls.user_price.disable();
       this.formControls.user_date.disable();
-      this.formControls.user_date.disable();
-      this.formControls.provider_date.setValue(parseDateToISOFormat(new Date(this.data.requestData.provider_intervention_date ?? this.data?.requestData?.user_intervention_date)));
+      let temp = new Date(this.data.requestData.provider_intervention_date ?? this.data?.requestData?.user_intervention_date);
+      if(temp.getTime() < (new Date().getTime() + (1000*60*60))){
+        temp = new Date(new Date().getTime() + (1000*60*60));
+      }
+      this.formControls.provider_date.setValue(parseDateToISOFormat(temp));
       this.formControls.provider_price.setValue(this.data.requestData.provider_price ?? 0);
     });
     this.modal.onAnyCloseEventFinished.subscribe((mountModal: NgxSmartModalComponent) =>{
@@ -142,10 +164,10 @@ export class ModalRequestNegotiationComponent {
       ...this.data.requestData,
       state: State.IN_ATTENDANCE_OF_CUSTOMER,
       provider_intervention_date: parseDateToISOFormat(new Date(this.formControls.provider_date.value)),
-      provider_price: this.formValues.provider_price.value,
+      provider_price: this.formControls.provider_price.value.toString(),
       final_intervention_date: null,
       final_price: null,
-      service_provider_id: this.selectedProvider?.id,
+      service_provider_id: this.canSetAProvider ? this.selectedProvider?.id : this.data.requestData.service_provider_id,
     }
 
     this.organizationService.updateARequest(this.data.requestData.id, data)
@@ -159,6 +181,28 @@ export class ModalRequestNegotiationComponent {
         console.error(err);
         this.isProcessing = false;
         this.screenService.showErrorToast('Une erreur s\'est produite lors de la publication de l\'offre ! Veuillez réessayer !')
+      });
+  }
+
+  onChangeProvider(){
+
+    this.isProcessing = true;
+
+    let data = {
+      service_provider_id: this.canSetAProvider ? this.selectedProvider?.id : this.data.requestData.service_provider_id,
+    }
+
+    this.organizationService.updateARequest(this.data.requestData.id, data)
+      .then((res: any) =>{
+        this.isProcessing = false;
+        this.screenService.showSuccessToast('Le prestataire a été changé avec succès !');
+        this.negotiationCompleted.emit(res.enquiry);
+        this.close();
+      })
+      .catch((err) =>{
+        console.error(err);
+        this.isProcessing = false;
+        this.screenService.showErrorToast('Une erreur s\'est produite lors du changement du prestataire !')
       });
   }
 

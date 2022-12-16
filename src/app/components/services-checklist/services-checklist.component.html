@@ -11,14 +11,14 @@
     </h2>
     <div [id]="'childrenForCategory'+item.parent.id" [class.show]="isCurrentAccordionItem(categoryParentId(item.parent.id))" class="accordion-collapse collapse" [attr.aria-labelledby]="categoryParentId(item.parent.id)"  data-bs-parent="#servicesListAccordion">
       <div class="accordion-body">
-        <div class="checkbox">
+        <div class="checkbox" *ngIf="!readOnly">
           <label (click)="onCheckAllChildrenServices(item.parent.id)">
             <input type="checkbox" [checked]="item.parent.hasCheckedAllChildren"> Tout sélectionner
           </label>
         </div>
         <div class="checkbox" *ngFor="let service of item.children">
           <label (click)="onCheckOneChildService(item.parent.id, service.id)">
-            <input type="checkbox" [checked]="service.isChecked"> {{label(service)}}
+            <input [disabled]="readOnly" type="checkbox" [checked]="service.isChecked"> {{label(service)}}
           </label>
         </div>
       </div>

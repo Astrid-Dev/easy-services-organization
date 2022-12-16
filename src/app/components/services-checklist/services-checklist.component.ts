@@ -11,6 +11,7 @@ export class ServicesChecklistComponent {
 
   @Input() servicesList: ServiceSelection[] = [];
   @Input() shouldCheckAtLeastOne: boolean = false;
+  @Input() readOnly: boolean = false;
   @Output('onChange') checkedList: EventEmitter<number[]> = new EventEmitter<number[]>();
 
   currentAccordionItem: string = '';
@@ -40,54 +41,58 @@ export class ServicesChecklistComponent {
   }
 
   onCheckAllChildrenServices(parentId: number){
-    this.servicesList.forEach((elt, index, array) =>{
-      if(elt.parent.id === parentId){
-        let checkState = !elt.parent.hasCheckedAllChildren;
-        let children = elt.children
-          .map((child) =>{
-            return {
-              ...child,
-              isChecked: checkState
-            }
-          });
-        let checkedChildren = children.filter(child => child.isChecked);
-        array[index] = {
-          parent: {
-            ...elt.parent,
-            hasCheckedAllChildren: checkState,
-            hasCheckedOneChild: checkedChildren.length > 0
-          },
-          children: children
+    if(!this.readOnly){
+      this.servicesList.forEach((elt, index, array) =>{
+        if(elt.parent.id === parentId){
+          let checkState = !elt.parent.hasCheckedAllChildren;
+          let children = elt.children
+            .map((child) =>{
+              return {
+                ...child,
+                isChecked: checkState
+              }
+            });
+          let checkedChildren = children.filter(child => child.isChecked);
+          array[index] = {
+            parent: {
+              ...elt.parent,
+              hasCheckedAllChildren: checkState,
+              hasCheckedOneChild: checkedChildren.length > 0
+            },
+            children: children
+          }
         }
-      }
-    });
+      });
 
-    this.checkedList.emit(this.checkedServices);
+      this.checkedList.emit(this.checkedServices);
+    }
   }
 
   onCheckOneChildService(parentId: number, serviceId: number){
-    this.servicesList.forEach((elt, index, array) =>{
-      if(elt.parent.id === parentId){
-        let children = elt.children
-          .map((child) =>{
-            return {
-              ...child,
-              isChecked: child.id === serviceId ? (!child.isChecked) : child.isChecked
-            }
-          });
-        let checkedChildren = children.filter(child => child.isChecked);
-        array[index] = {
-          parent: {
-            ...elt.parent,
-            hasCheckedAllChildren: checkedChildren.length === elt.children.length,
-            hasCheckedOneChild: checkedChildren.length > 0
-          },
-          children: children
+    if(!this.readOnly){
+      this.servicesList.forEach((elt, index, array) =>{
+        if(elt.parent.id === parentId){
+          let children = elt.children
+            .map((child) =>{
+              return {
+                ...child,
+                isChecked: child.id === serviceId ? (!child.isChecked) : child.isChecked
+              }
+            });
+          let checkedChildren = children.filter(child => child.isChecked);
+          array[index] = {
+            parent: {
+              ...elt.parent,
+              hasCheckedAllChildren: checkedChildren.length === elt.children.length,
+              hasCheckedOneChild: checkedChildren.length > 0
+            },
+            children: children
+          }
         }
-      }
-    });
+      });
 
-    this.checkedList.emit(this.checkedServices);
+      this.checkedList.emit(this.checkedServices);
+    }
   }
 
   onAccordionChange(accordionItemName: string){

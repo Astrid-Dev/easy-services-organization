@@ -23,6 +23,9 @@ export class CanCreateEnterpriseGuard implements CanActivate {
           }
           else{
             let canCreate = (user.role === UserRoles.SIMPLE_USER);
+            if(!canCreate){
+              this.router.navigate(["/home"]);
+            }
             resolve(canCreate);
           }
         },

@@ -95,6 +95,10 @@ export class RequestDetailsComponent {
     );
   }
 
+  get loaderColor(){
+    return this.currentAction === 'cancellation' ? 'danger' : this.currentAction === 'approbation' ? 'success' : 'primary';
+  }
+
   label(item: any){
     return (this.translationService.getCurrentLang() === 'fr' ? item?.label : item?.label_en) ?? 'value';
   }
@@ -160,13 +164,7 @@ export class RequestDetailsComponent {
     this.organizationService.getARequestWithCode(code)
       .then((res: any) =>{
         console.log(res);
-        let {service, answers, service_provider, user, ...data} = res;
-        this.request = res;
-        this.requestService = service;
-        this.requestProvider = service_provider;
-        this.requestUser = user;
-        this.requestData = data;
-        this.requestAnswers = JSON.parse(answers.content);
+        this.syncData(res);
 
         this.hasLoadedRequestData = true;
       })
@@ -176,30 +174,30 @@ export class RequestDetailsComponent {
       });
   }
 
+  syncData(res: any){
+    let {service, answers, service_provider, user, ...data} = res;
+    this.request = res;
+    this.requestService = service;
+    this.requestProvider = service_provider;
+    this.requestUser = user;
+    this.requestData = data;
+    this.requestAnswers = JSON.parse(answers.content);
+  }
+
   askConfirmation(action: string){
     this.currentAction = action;
     let temp = action === 'cancellation' ? 'ENQUIRYACTIONS.ONABANDON2' : action === 'approbation' ? 'ENQUIRYACTIONS.ONAPPROVE2' : ' ';
-    // this.screenService.presentAlert({
-    //   mode: "ios",
-    //   message: this.translationService.getValueOf(temp),
-    //   buttons: [
-    //     {
-    //       text: this.translationService.getValueOf('SUBMIT.NO'),
-    //       role: 'cancel'
-    //     },
-    //     {
-    //       text: this.translationService.getValueOf('SUBMIT.YES'),
-    //       handler: () =>{
-    //         if(action === 'cancellation'){
-    //           this.onCancelRequest();
-    //         }
-    //         else if (action === 'approbation'){
-    //           this.onApproveRequest()
-    //         }
-    //       }
-    //     }
-    //   ]
-    // });
+    this.screenService.askConfirmation(this.translationService.getValueOf(action))
+      .then((res) =>{
+        if(res){
+          if(action === 'cancellation'){
+            this.onCancelRequest();
+          }
+          else if(action === 'approbation'){
+            this.onApproveRequest();
+          }
+        }
+      });
   }
 
   onCancelRequest()
@@ -224,9 +222,7 @@ export class RequestDetailsComponent {
     this.organizationService.updateARequest(this.requestData?.id as number, newRequestData)
       .then((res: any) =>{
         console.log(res);
-        this.requestData = {
-          ...res.enquiry
-        }
+        this.syncData(res.enquiry);
         if(this.currentAction === 'cancellation'){
           this.requestProvider = null;
         }
@@ -295,23 +291,18 @@ export class RequestDetailsComponent {
     // return await modal.present();
   }
 
-  openNegotiationModal(){
+  openNegotiationModal(justChangeProvider: boolean = false){
     this.negotiationModal.setData({
       requestData: this.requestData,
       requestProvider: this.requestProvider,
-      organizationId: this.user?.organization?.id
+      organizationId: this.user?.organization?.id,
+      justChangeProvider: justChangeProvider
     }, true);
     this.negotiationModal.open();
   }
 
   onNegotiationCompleted(newRequest: any){
-    let {service, answers, service_provider, user, ...data} = newRequest;
-    this.request = newRequest;
-    this.requestService = service;
-    this.requestProvider = service_provider;
-    this.requestUser = user;
-    this.requestData = data;
-    this.requestAnswers = JSON.parse(answers.content);
+   this.syncData(newRequest);
   }
 
 }

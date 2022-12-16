@@ -5,7 +5,9 @@ import {Router} from "@angular/router";
 import {OrganizationService} from "../../services/organization.service";
 import {User} from "../../models/User";
 import {AuthStateService} from "../../services/auth-state.service";
-import {getARemoteResourcePath} from "../../helpers/helpers.functions";
+import {formatNewServicesGroup, getARemoteResourcePath, initializeServicesGroup} from "../../helpers/helpers.functions";
+import {Service, ServiceSelection} from "../../models/Service";
+import {CategoryService} from "../../services/category.service";
 
 @Component({
   selector: 'app-organization',
@@ -16,15 +18,20 @@ export class OrganizationComponent {
 
   hasLoadedOrganizationData: boolean | null = null;
   hasLoadedUserData: boolean | null = null;
+  hasLoadedServices: boolean | null = null;
 
   organization!: Organization;
   user!: User;
+
+  servicesList: ServiceSelection[] = [];
+  allServices: Service[] = [];
 
   constructor(
     private translationService: TranslationService,
     private router: Router,
     private organizationService: OrganizationService,
-    private authStateService: AuthStateService
+    private authStateService: AuthStateService,
+    private categoryService: CategoryService,
   ){
 
   }
@@ -47,6 +54,7 @@ export class OrganizationComponent {
 
   ngOnInit(){
     this.loadUser();
+    this.loadServices();
     this.loadOrganizationData();
   }
 
@@ -57,6 +65,7 @@ export class OrganizationComponent {
         if(user){
           this.user = user;
           this.organization = user?.organization as Organization;
+          this.syncServices();
           this.hasLoadedUserData = true;
         }
         else{
@@ -68,6 +77,21 @@ export class OrganizationComponent {
         this.hasLoadedUserData = false;
       }
     });
+  }
+
+  loadServices(){
+    this.hasLoadedServices = null;
+
+    this.categoryService.getAllServices()
+      .then((res: any) =>{
+        this.allServices = res;
+        this.syncServices();
+        this.hasLoadedServices = true;
+      })
+      .catch((err) =>{
+        console.error(err);
+        this.hasLoadedServices = false;
+      });
   }
 
   loadOrganizationData(){
@@ -82,6 +106,7 @@ export class OrganizationComponent {
             ...this.organization
           }
         }
+        this.syncServices();
 
         this.authStateService.setUserData(this.user);
         this.hasLoadedOrganizationData = true;
@@ -90,6 +115,11 @@ export class OrganizationComponent {
         console.error(err);
         this.hasLoadedOrganizationData = false;
       });
+  }
+
+  syncServices(){
+    let temp: number[] = this.organization?.applications?.map(elt => elt.service_id) ?? [];
+    this.servicesList = formatNewServicesGroup(temp, this.allServices, true);
   }
 
   getAFieldValue(fieldName: string){
